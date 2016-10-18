@@ -2,9 +2,11 @@
 # -*- coding: utf-8 -*-
 
 from flask_wtf import Form
+from flask_pagedown.fields import PageDownField
 from wtforms import StringField, SubmitField, TextAreaField, SelectField
 from wtforms.validators import Required, InputRequired, Length, Email, Regexp, ValidationError
 from ..models import User, Role
+
 
 class NameForm(Form):
     name = StringField('What id your name?', validators=[InputRequired()])
@@ -38,6 +40,12 @@ class EditProfileAdminForm(Form):
         if field.data != self.user.username and User.query.filter_by(username=field.data).first():
             raise ValidationError('Username already in use.')
 
+
 class PostForm(Form):
-    body = TextAreaField("Write what you think now", validators=[InputRequired()])
+    body = PageDownField("Write what you think now", validators=[InputRequired()])
+    submit = SubmitField('Submit')
+
+
+class CommentForm(Form):
+    body = StringField('Enter your comment', validators=[InputRequired()])
     submit = SubmitField('Submit')
